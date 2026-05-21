@@ -1,4 +1,4 @@
-# Conflict-Aware Additive Guidance for Flow Models under Compositional Rewards
+# Conflict-Aware Additive Guidance for Flow Models under Compositional Rewards (coming soon)
 
 <p align="center">
   <a href="https://arxiv.org/abs/2605.20758"><img src="https://img.shields.io/badge/arXiv-2605.20758-b31b1b.svg" alt="arXiv"></a>
@@ -11,32 +11,53 @@ Official implementation of **Conflict-Aware Additive Guidance for Flow Models un
 
 ## Overview
 
-> **Challenge.** Inference-time guidance can easily push your sampling process off the data manifold. How do we harness large, complex pretrained generative priors to satisfy multiple constraints at inference time, without drifting off-manifold (i.e., avoiding hallucinated generation)?
+📌 **Challenge.** Inference-time guidance can easily push your sampling process off the data manifold. 
 
-👉 In this work, we introduce **CAR guidance**, a plug-and-play module that corrects off-manifold drift on the fly.
+👉 How do we harness large, complex pretrained generative priors to satisfy multiple constraints at inference time, without drifting off-manifold (i.e., avoiding hallucinated generation)? In this work, we introduce **CAR guidance**, a plug-and-play module that corrects off-manifold drift on the fly.
 
 🔑 **Key insight.** In compositional reward settings, the approximation error grows sharply with gradient misalignment $(1 - \cos\varphi)$ and the number of reward functions $G$, where $\varphi$ is the average angular divergence between guidance channels.
-
-## Demo
 
 https://github.com/user-attachments/assets/4fefa401-ea46-4bf4-8a55-3fdce9e1ded3
 
 ## Requirements
 
+Each task has its own directory with a self-contained environment. Set up the one for the experiment you want to run. For example, for the image editing task:
+
+```bash
+cd image
+conda env create -f environment.yml
+conda activate car_guidance
+pip install -r requirements.txt
+```
+
+The other tasks follow the same steps — replace `image` with `synthetic`, `planning` or `manipulation`.
 
 ## Datasets
 
 We evaluate CAR guidance on three tasks. Download the corresponding dataset before running each experiment.
 
-### Text-Guided Image Manipulation — CelebA-HQ-1024
+- **Text-Guided Image Manipulation — CelebA-HQ-1024.** A high-quality version of CelebA containing 30,000 images at 1024×1024 resolution. Download it from the [Kaggle CelebA-HQ dataset](https://www.kaggle.com/datasets/lamsimon/celebahq).
+- **Robot Planning — Maze2D.** Available on Hugging Face: [yuxuehui/GAR_guidance](https://huggingface.co/datasets/yuxuehui/GAR_guidance).
+- **Robot Manipulation — ManiSkill2.** Available on Hugging Face: [yuxuehui/GAR_guidance](https://huggingface.co/datasets/yuxuehui/GAR_guidance).
 
-CelebA-HQ-1024 is a high-quality version of CelebA containing 30,000 images at 1024×1024 resolution. Download it from the [Kaggle CelebA-HQ dataset](https://www.kaggle.com/datasets/lamsimon/celebahq).
+## Checkpoints
 
-### Robot Planning — Maze2D
+- **Text-Guided Image Manipulation — CelebA-HQ-1024.**
+- **Robot Planning — Maze2D.**
+- **Robot Manipulation — ManiSkill2.**
 
-The Maze2D dataset is available on Hugging Face: [yuxuehui/GAR_guidance](https://huggingface.co/datasets/yuxuehui/GAR_guidance).
+## 📎 Citation
 
-### Robot Manipulation — ManiSkill2
+If you find CAR guidance useful in your research, please consider citing our paper:
 
-The ManiSkill2 dataset is available on Hugging Face: [yuxuehui/GAR_guidance](https://huggingface.co/datasets/yuxuehui/GAR_guidance).
- 
+```bibtex
+@misc{yu2026conflictawareadditiveguidanceflow,
+      title={Conflict-Aware Additive Guidance for Flow Models under Compositional Rewards},
+      author={Xuehui Yu and Fucheng Cai and Meiyi Wang and Xiaopeng Fan and Harold Soh},
+      year={2026},
+      eprint={2605.20758},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2605.20758},
+}
+```
