@@ -37,8 +37,8 @@ The other tasks follow the same steps — replace `image` with `synthetic`, `pla
 We evaluate CAR guidance on three tasks. Download the corresponding dataset before running each experiment.
 
 - **Text-Guided Image Manipulation — CelebA-HQ-1024.** A high-quality version of CelebA containing 30,000 images at 1024×1024 resolution. Download it from the [Kaggle CelebA-HQ dataset](https://www.kaggle.com/datasets/lamsimon/celebahq).
-- **Robot Planning — Maze2D.** Available on Hugging Face: [yuxuehui/GAR_guidance](https://huggingface.co/datasets/yuxuehui/GAR_guidance).
-- **Robot Manipulation — ManiSkill2.** Available on Hugging Face: [yuxuehui/GAR_guidance](https://huggingface.co/datasets/yuxuehui/GAR_guidance).
+- **Robot Planning — Maze2D.** Available on Hugging Face: [car-guidance/GAR_guidance](https://huggingface.co/datasets/car-guidance/GAR_guidance).
+- **Robot Manipulation — ManiSkill2.** Available on Hugging Face: [car-guidance/GAR_guidance](https://huggingface.co/datasets/car-guidance/GAR_guidance).
 
 ## Checkpoints
 
