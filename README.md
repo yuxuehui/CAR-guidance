@@ -13,7 +13,7 @@ Official implementation of **Conflict-Aware Additive Guidance for Flow Models un
 
 📌 **Challenge.** Inference-time guidance can easily push your sampling process off the data manifold. 
 
-👉 How do we harness large, complex pretrained generative priors to satisfy multiple constraints at inference time, without drifting off-manifold (i.e., avoiding hallucinated generation)? In this work, we introduce **CAR guidance**, a plug-and-play module that corrects off-manifold drift on the fly.
+👉 How do we harness large, complex pretrained generative priors to satisfy multiple constraints at inference time, without drifting off-manifold (i.e., avoiding hallucinated generation)? In this work, we introduce CAR guidance, a plug-and-play module that corrects off-manifold drift on the fly.
 
 🔑 **Key insight.** In compositional reward settings, the approximation error grows sharply with gradient misalignment $(1 - \cos\varphi)$ and the number of reward functions $G$, where $\varphi$ is the average angular divergence between guidance channels.
 
@@ -51,13 +51,12 @@ We evaluate CAR guidance on three tasks. Download the corresponding dataset befo
 If you find CAR guidance useful in your research, please consider citing our paper:
 
 ```bibtex
-@misc{yu2026conflictawareadditiveguidanceflow,
-      title={Conflict-Aware Additive Guidance for Flow Models under Compositional Rewards},
-      author={Xuehui Yu and Fucheng Cai and Meiyi Wang and Xiaopeng Fan and Harold Soh},
-      year={2026},
-      eprint={2605.20758},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI},
-      url={https://arxiv.org/abs/2605.20758},
+@inproceedings{
+anonymous2026conflictaware,
+title={Conflict-Aware Additive Guidance for  Flow Models under Compositional Rewards},
+author={Anonymous},
+booktitle={Forty-third International Conference on Machine Learning},
+year={2026},
+url={https://openreview.net/forum?id=DJtX0Fo7ii}
 }
 ```
