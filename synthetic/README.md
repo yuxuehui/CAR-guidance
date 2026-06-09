@@ -3,7 +3,7 @@
 Synthetic 2D experiment for **Conflict-Aware Additive Guidance for Flow Models
 under Compositional Rewards** (ICML 2026). A pretrained flow-matching velocity
 field samples a 3-cluster 2D distribution; two pretrained classifiers act as
-compositional rewards. Methods compared:
+compositional rewards. Included methods:
 
 - `g_cov_g` — non-learnable approximate guidance `g^approx` (baseline)
 - `guidance_matching` — learnable guidance-matching baseline
@@ -50,7 +50,7 @@ Defaults in `config/fm_config.yaml`, overridable on the CLI (`python main.py --h
 | Argument | Meaning | Value |
 | --- | --- | --- |
 | `--guidance_fn` | guidance method | `car_guidance` |
-| `--conflict_threshold` | conflict gate (≈perpendicular on the `[0,1]` scale) | `0.495` |
+| `--conflict_threshold` | conflict gate  | `0.495` |
 | `--conflict_temperature` | gate transition width | `0.01` |
 | `--active_ratio_threshold` | early-stop on conflict-region ratio | `0.00` / `0.05` |
 | `--guidance_scale` | reward guidance scale | `7` |
