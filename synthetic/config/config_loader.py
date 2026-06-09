@@ -101,9 +101,6 @@ class TrainConfig:
     conflict_threshold: float = 0.495
     conflict_temperature: float = 0.15
     blend_function: str = "smootherstep"  # "smootherstep" or "sigmoid"
-    conflict_score_method: str = "regional"  # "regional" or "direct"
-    regional_conflict_sigma: float = 0.1
-    online_loss_type: str = "ground_truth"  # "ground_truth", "mse_simple", or "gradient"
     x1_conflict_threshold: Optional[float] = None  # early-stop when x1_conflict_ratio < threshold
     active_ratio_threshold: Optional[float] = None  # early-stop when trajectory conflict ratio < threshold
     loss_early_stop_threshold: Optional[float] = None  # early-stop when loss < threshold

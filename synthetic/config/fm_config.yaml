@@ -17,9 +17,6 @@ energy_temperature: 1.0
 conflict_threshold: 0.495            # gate at ~perpendicular gradients (conflict score is in [0,1])
 conflict_temperature: 0.01           # sigmoid/smootherstep transition width of the conflict gate
 blend_function: smootherstep         # "smootherstep" or "sigmoid"
-conflict_score_method: direct        # "regional" or "direct"
-regional_conflict_sigma: 0.1         # Gaussian noise std for regional conflict-score sampling
-online_loss_type: ground_truth       # "ground_truth", "mse_simple", or "gradient"
 x1_conflict_threshold: 0.0           # early-stop when x1_conflict_ratio < threshold
 active_ratio_threshold: 0.01         # early-stop when trajectory conflict ratio < threshold
 loss_early_stop_threshold: 0.000001  # early-stop when loss < threshold

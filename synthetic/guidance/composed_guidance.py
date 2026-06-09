@@ -779,21 +779,13 @@ class GuidanceMatching(ComposedGuidance):
 
 class GCovGGMOnlineGuidance(GCovGGMGuidance):
     def _prepare_models_for_subclass(self):
-        online_loss_type = getattr(self.cfg, "online_loss_type", "ground_truth")
-
-        # Gradient mode outputs a vector field (like GuidanceMatching); other modes a scalar energy/reward.
-        if online_loss_type == "gradient":
-            batch = self.sample_batch_fn(2, self.device)
-            inputs, _, _ = self._extract_batch(batch)
-            space_dim = inputs.shape[-1] - 1  # subtract 1 for the time dimension
-            self._prepare_models(self.sample_batch_fn, output_dim_override=space_dim)
-            print(f"[GCovGGMOnlineGuidance] Using gradient mode: output_dim={space_dim} (vector field for u_t - v_θ)")
-        else:
-            self._prepare_models(self.sample_batch_fn, output_dim_override=1)
-            if online_loss_type == "mse_simple":
-                print(f"[GCovGGMOnlineGuidance] Using mse_simple mode: output_dim=1 (scalar for terminal reward r1)")
-            else:
-                print(f"[GCovGGMOnlineGuidance] Using scalar mode: output_dim=1")
+        # The online residual g_psi is a vector field (like GuidanceMatching),
+        # trained to regress u_t - v_θ on conflict regions.
+        batch = self.sample_batch_fn(2, self.device)
+        inputs, _, _ = self._extract_batch(batch)
+        space_dim = inputs.shape[-1] - 1  # subtract 1 for the time dimension
+        self._prepare_models(self.sample_batch_fn, output_dim_override=space_dim)
+        print(f"[GCovGGMOnlineGuidance] output_dim={space_dim} (vector field for u_t - v_θ)")
 
         # Online guidance never trains, saves, or uses a separate z model, so we
         # drop the one created by _prepare_models. This way restoring only the
@@ -846,70 +838,6 @@ class GCovGGMOnlineGuidance(GCovGGMGuidance):
 
         return w_eff, r1
 
-    def _compute_online_loss_ground_truth(self, xs_stacked, ts_stacked, w_eff, conflict_mask, num_steps, batch_size):
-        """Compute loss for online training."""
-        space_dim = xs_stacked.shape[-1]
-        inp = torch.cat([xs_stacked.reshape(-1, space_dim), ts_stacked.reshape(-1, 1)], dim=-1)
-
-        energy_pred = self.learned_guidance_model(inp).view(num_steps, batch_size)
-
-        tau = getattr(self.cfg, "energy_temperature", 1.0)
-
-        # Model outputs reward-like values (larger is better), so p_phi ∝ exp(reward / tau).
-        log_prob = torch.log_softmax(energy_pred / tau, dim=1)
-
-        w_mat = w_eff.view(1, batch_size).expand(num_steps, batch_size)
-
-        # Target must not carry gradients.
-        mask = conflict_mask.to(w_mat.device) if conflict_mask is not None else torch.ones_like(w_mat)
-        loss_weights = (w_mat * mask).detach()
-
-        # Normalize the (non-negative) target; if a timestep's weights all vanish,
-        # target_dist becomes 0 there and contributes nothing to the loss.
-        weight_sum = loss_weights.sum(dim=1, keepdim=True)
-        target_dist = loss_weights / (weight_sum + 1e-8)
-
-        loss = -torch.sum(target_dist * log_prob, dim=1)
-
-        return loss.mean()
-
-    def _compute_online_loss_mse_simple(
-        self,
-        xs_stacked,      # (T, B, space_dim)
-        ts_stacked,      # (T, B, 1)
-        r1,              # (B,) or (B,1), terminal reward/label for each trajectory
-        conflict_mask,   # (T, B)
-        num_steps,
-        batch_size,
-    ):
-        """
-        Simplified MSE version of online loss:
-            For each (t, i), regress pred(t, i) to r1[i],
-            weighted by conflict_mask only (no trajectory-level weights).
-        """
-        space_dim = xs_stacked.shape[-1]
-        inp = torch.cat([xs_stacked.reshape(-1, space_dim), ts_stacked.reshape(-1, 1)], dim=-1)
-        pred = self.learned_guidance_model(inp).view(num_steps, batch_size)
-
-        if r1.dim() == 1:
-            r1_ = r1.view(1, batch_size)
-        else:
-            r1_ = r1.view(1, batch_size)
-
-        # Detach so no gradient leaks back into the reward model.
-        target = r1_.expand(num_steps, batch_size).detach()
-
-        if conflict_mask is not None:
-            weight = conflict_mask.to(pred.device).float()
-        else:
-            weight = torch.ones_like(pred)
-
-        loss_unreduced = F.mse_loss(pred, target, reduction='none')
-
-        loss = (loss_unreduced * weight).sum() / (weight.sum() + 1e-8)
-
-        return loss
-    
     def _compute_online_loss_gradient(
         self,
         xs_stacked,      # (T, B, space_dim)
@@ -971,112 +899,6 @@ class GCovGGMOnlineGuidance(GCovGGMGuidance):
 
         return loss
     
-    def _compute_online_loss_gradient_app(
-        self,
-        xs_stacked,      # (T, B, space_dim)
-        ts_stacked,      # (T, B, 1)
-        r1,              # (B,) - terminal reward; not strictly needed in gradient-matching mode
-        conflict_mask,   # (T, B)
-        num_steps,
-        batch_size,
-        x1=None,         # (B, space_dim) - terminal point x1, if None will try to extract from xs_stacked
-    ):
-        """
-        Gradient regression version of online loss.
-        Target: Negative Gradient of the ENERGY function sum_i scale_i * J_i(x_t).
-            
-        We train the model to predict -∇J (direction of decreasing energy).
-        """
-        space_dim = xs_stacked.shape[-1]
-
-        xs_flat = xs_stacked.reshape(-1, space_dim)
-        ts_flat = ts_stacked.reshape(-1, 1)
-
-        # Target gradient from terminal reward r1 = -total_J(x1). The learned residual
-        # should point towards higher reward (lower energy): target_grad = grad(r1) = -grad(total_J(x1)).
-        x1 = xs_stacked[-1]  # (B, space_dim) — terminal-state estimate of x1
-
-        with torch.enable_grad():
-            if self.distribution is None:
-                 raise ValueError("Gradient regression requires self.distribution to be set.")
-
-            # r1 was passed in (computed under no_grad); recompute total_J(x1) with gradient tracking.
-            x1_req = x1.detach().requires_grad_(True)
-            total_J_x1 = torch.zeros(batch_size, device=self.device)
-            for clf, target, scale in zip(self.classifiers, self.targets, self.scales):
-                J_i = self.distribution.get_J(x1_req, classifier=clf, label=target)
-                total_J_x1 = total_J_x1 + float(scale) * J_i
-
-            grad_r1 = torch.autograd.grad(
-                (-total_J_x1).sum(), x1_req,  # grad(r1) = grad(-total_J)
-                create_graph=False, retain_graph=False
-            )[0]  # (B, space_dim)
-
-        # Broadcast the terminal gradient to all timesteps as the target.
-        target_grad_terminal = grad_r1.detach()  # (B, space_dim)
-        target_grad = target_grad_terminal.unsqueeze(0).expand(num_steps, -1, -1).reshape(-1, space_dim)  # (T*B, space_dim)
-
-        inp = torch.cat([xs_flat.detach(), ts_flat], dim=-1)
-        model_output = self.learned_guidance_model(inp)
-
-        if model_output.shape[-1] == space_dim:
-            # Model outputs the vector field directly (∇J).
-            pred_grad = model_output
-        else:
-            # Scalar-potential model (learning a reward ≈ -J): differentiate to get the gradient.
-            print(f"[WARNING] This means model is NOT directly learning gradients!")
-            xs_for_grad = xs_flat.detach().requires_grad_(True)
-            inp_for_grad = torch.cat([xs_for_grad, ts_flat], dim=-1)
-            energy_output = self.learned_guidance_model(inp_for_grad).squeeze(-1)
-            pred_grad = torch.autograd.grad(
-                energy_output.sum(), xs_for_grad,
-                create_graph=True, retain_graph=True
-            )[0]
-
-        pred_grad_reshaped = pred_grad.view(num_steps, batch_size, space_dim)
-        target_grad_reshaped = target_grad.view(num_steps, batch_size, space_dim)
-
-        loss_per_point = ((pred_grad_reshaped - target_grad_reshaped) ** 2).mean(dim=-1)
-
-        if conflict_mask is not None:
-            weight = conflict_mask.to(pred_grad.device).float()
-        else:
-            weight = torch.ones(num_steps, batch_size, device=pred_grad.device)
-        
-        loss = (loss_per_point * weight).sum() / (weight.sum() + 1e-8)
-        
-        return loss
-    
-    def _compute_online_loss(self, xs_stacked, ts_stacked, w_eff, conflict_mask, num_steps, batch_size):
-        """
-        xs_stacked: (T, B, 2)
-        ts_stacked: (T, B, 1)
-        w_eff:      (B, 1)   # Terminal reward soft label
-        conflict_mask: (T, B) or None
-        """
-        space_dim = xs_stacked.shape[-1]
-        inp = torch.cat([xs_stacked.reshape(-1, space_dim), ts_stacked.reshape(-1, 1)], dim=-1)
-        pred_energy = self.learned_guidance_model(inp).view(num_steps, batch_size)  # e_phi(t, i)
-
-        # Model distribution p_phi(i | t) ∝ exp(reward_phi(i,t) / tau); reward convention,
-        # so no negative sign. Normalize along the batch for each timestep t.
-        tau = getattr(self.cfg, "energy_temperature", 1.0)
-        logits = pred_energy / tau
-        log_prob = torch.log_softmax(logits, dim=1)
-
-        # Target distribution p*(i | t) from w_eff + conflict_mask, normalized per t.
-        w_mat = w_eff.view(1, batch_size).expand(num_steps, batch_size)  # [T,B]
-        if conflict_mask is not None:
-            loss_weights = w_mat * conflict_mask.to(w_mat.device)
-        else:
-            loss_weights = w_mat
-
-        target_dist = loss_weights / (loss_weights.sum(dim=1, keepdim=True) + 1e-8)
-
-        # Cross-entropy CE(p* || p_phi).
-        loss = -(target_dist * log_prob).sum(dim=1).mean()
-        return loss
-    
     def _log_online_training_progress_ground_truth(self, step, total_steps, loss, active_ratio, w_eff, r1):
         with torch.no_grad():
             w_eff_flat = w_eff.flatten()
@@ -1099,26 +921,6 @@ class GCovGGMOnlineGuidance(GCovGGMGuidance):
             f"corr(w_eff, reward): {corr:.3f}"
         )
     
-    def _log_online_training_progress(self, step, total_steps, loss, active_ratio, w_eff, base_log_prob):
-        """Log training progress for online guidance."""
-        with torch.no_grad():
-            w_eff_flat = w_eff.flatten()
-            neg_r1 = -base_log_prob
-            
-            if len(w_eff_flat) > 1:
-                w_mean, r_mean = w_eff_flat.mean(), neg_r1.mean()
-                w_centered = w_eff_flat - w_mean
-                r_centered = neg_r1 - r_mean
-                numerator = (w_centered * r_centered).sum()
-                denominator = torch.sqrt((w_centered.pow(2).sum() * r_centered.pow(2).sum()) + 1e-8)
-                corr = (numerator / denominator).item() if denominator > 1e-8 else 0.0
-            else:
-                corr = 0.0
-        
-        print(f"Online-Step {step}/{total_steps} Loss: {loss.item():.6f} | "
-              f"Active Conflict: {active_ratio:.1%} | "
-              f"corr(w_eff, -r1): {corr:.3f}")
-
     def train_model(self):
         import time
         
@@ -1246,27 +1048,11 @@ class GCovGGMOnlineGuidance(GCovGGMGuidance):
 
             w_eff, r1 = self._compute_trajectory_weights_ground_truth(x1, batch_size)
 
-            online_loss_type = getattr(self.cfg, "online_loss_type", "ground_truth")
-            if online_loss_type == "mse_simple":  # MSE loss for terminal reward
-                loss = self._compute_online_loss_mse_simple(
-                    xs_stacked, ts_stacked, r1, conflict_mask,
-                    num_steps, batch_size
-                )
-            elif online_loss_type == "gradient":  # gradient regression: pred ≈ u_t - v_θ
-                loss = self._compute_online_loss_gradient(
-                    xs_stacked, ts_stacked, r1, conflict_mask,
-                    num_steps, batch_size, x1=x1
-                )
-            elif online_loss_type == "app_gradient":  # gradient regression on -∇J
-                loss = self._compute_online_loss_gradient_app(
-                    xs_stacked, ts_stacked, r1, conflict_mask,
-                    num_steps, batch_size, x1=x1
-                )
-            else:  # default "ground_truth": cross-entropy loss
-                loss = self._compute_online_loss_ground_truth(
-                    xs_stacked, ts_stacked, w_eff, conflict_mask,
-                    num_steps, batch_size
-                )
+            # Gradient regression: g_psi predicts u_t - v_θ on conflict regions.
+            loss = self._compute_online_loss_gradient(
+                xs_stacked, ts_stacked, r1, conflict_mask,
+                num_steps, batch_size, x1=x1
+            )
 
             if log_interval and (i+1) % log_interval == 0:
                 self._log_online_training_progress_ground_truth(i+1, steps, loss, active_ratio, w_eff, r1)

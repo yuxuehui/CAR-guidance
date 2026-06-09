@@ -546,21 +546,12 @@ class EnergyVisualizer:
                 targets = list(getattr(guided_field, "targets", []))
                 classifiers = getattr(guided_field, "classifiers", [])
                 if distribution is not None and targets and len(classifiers) >= 2:
-                    method = getattr(self.cfg, "conflict_score_method", "regional")
-
-                    # Regional method is slow on large grids; fall back to direct.
-                    if method == "regional" and positions.shape[0] > 4096:
-                        method = "direct"
-
                     score = None
 
                     if hasattr(distribution, "compute_direct_conflict_score"):
                         classifier_indices = self._map_classifiers_to_indices(classifiers, distribution)
 
                         if classifier_indices is not None and len(classifier_indices) >= 2:
-                            sigma = getattr(self.cfg, "regional_conflict_sigma", 0.1)
-                            num_samples = getattr(self.cfg, "regional_conflict_num_samples", 10)
-
                             # _map_classifiers_to_indices returns indices in classifiers-list order,
                             # so targets (also in classifiers order) aligns with classifier_indices.
                             if len(targets) == 1:
@@ -702,18 +693,11 @@ class EnergyVisualizer:
                 classifiers = getattr(guided_field, "classifiers", [])
                 
                 if distribution is not None and targets and len(classifiers) >= 2:
-                    method = getattr(self.cfg, "conflict_score_method", "regional")
-                    if method == "regional" and positions.shape[0] > 4096:
-                        method = "direct"
-                    
                     score = None
                     if hasattr(distribution, "compute_direct_conflict_score"):
                         classifier_indices = self._map_classifiers_to_indices(classifiers, distribution)
                         
                         if classifier_indices is not None and len(classifier_indices) >= 2:
-                            sigma = getattr(self.cfg, "regional_conflict_sigma", 0.1)
-                            num_samples = getattr(self.cfg, "regional_conflict_num_samples", 10)
-                            
                             if len(targets) == 1:
                                 label_arg = int(targets[0])
                             else:

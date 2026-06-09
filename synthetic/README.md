@@ -32,17 +32,16 @@ Or a single config directly (CAR guidance, ours):
 
 ```bash
 python -u ./main.py \
-  --guidance_fn car_guidance --conflict_score_method direct \
-  --conflict_threshold 0.495 --conflict_temperature 0.01 \
-  --active_ratio_threshold 0.00 --online_loss_type gradient \
-  --guidance_ckpt_dir guidance/pretrained_guidance_online_mar/guidance_ckpt_cth0495_gradient_art000 \
-  --result_output_dir result_online_mar/result_cth0495_gradient_art000
+  --guidance_fn car_guidance \
+  --guidance_ckpt_dir guidance/pretrained_guidance/online_ckpt \
+  --result_output_dir result
 ```
 
-`main.py` builds the `c1c0` combination, loads a matching guidance net from
-`guidance/pretrained_guidance/` if present, else trains and saves one under
-`--guidance_ckpt_dir`. Visualization is off by default; set `VISUALIZE = True`
-in `main.py` to regenerate the figures.
+`main.py` builds the `c1c0` combination and loads the residual `g_psi` from
+`--guidance_ckpt_dir` if present (the command above uses the shipped
+`guidance/pretrained_guidance/online_ckpt/`), otherwise it trains and saves one
+there. Visualization is off by default; set `VISUALIZE = True` in `main.py` to
+regenerate the figures.
 
 ## Key hyperparameters
 
@@ -53,8 +52,6 @@ Defaults in `config/fm_config.yaml`, overridable on the CLI (`python main.py --h
 | `--guidance_fn` | guidance method | `car_guidance` |
 | `--conflict_threshold` | conflict gate (≈perpendicular on the `[0,1]` scale) | `0.495` |
 | `--conflict_temperature` | gate transition width | `0.01` |
-| `--conflict_score_method` | conflict-score estimator | `direct` |
-| `--online_loss_type` | online `g_psi` loss | `gradient` |
 | `--active_ratio_threshold` | early-stop on conflict-region ratio | `0.00` / `0.05` |
 | `--guidance_scale` | reward guidance scale | `7` |
 

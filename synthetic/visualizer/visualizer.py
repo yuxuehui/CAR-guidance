@@ -1118,19 +1118,10 @@ class Visualizer:
         if distribution is not None and targets and len(classifiers) >= 2:
             try:
                 with torch.enable_grad():
-                    method = getattr(self.cfg, "conflict_score_method", "regional")
-
-                    # Regional method is slow on large grids; fall back to direct
-                    if method == "regional" and positions.shape[0] > 4096:
-                        method = "direct"
-
                     if hasattr(distribution, "compute_direct_conflict_score"):
                         classifier_indices = self._map_classifiers_to_indices(classifiers, distribution)
 
                         if classifier_indices is not None and len(classifier_indices) >= 2:
-                            sigma = getattr(self.cfg, "regional_conflict_sigma", 0.1)
-                            num_samples = getattr(self.cfg, "regional_conflict_num_samples", 10)
-
                             # _map_classifiers_to_indices preserves the classifiers list order,
                             # so targets (same order) aligns with classifier_indices
                             if len(targets) == 1:
@@ -1157,7 +1148,6 @@ class Visualizer:
                             
                             conflict_scores = distribution.compute_direct_conflict_score(
                                 x_for_conflict, label=label_arg, classifier_indices=classifier_indices,
-                                method=method, sigma=sigma, num_samples=num_samples
                             )
             except Exception as e:
                 print(f"Warning: Could not compute conflict scores: {e}")

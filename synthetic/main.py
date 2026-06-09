@@ -88,7 +88,6 @@ def build_output_dir(cfg, script_dir: str) -> str:
     if getattr(cfg, "estimate_x1", False):
         slug += "_estimatex1"
     slug += f"_cth{getattr(cfg, 'conflict_threshold', 0.9)}"
-    slug += f"_csm{getattr(cfg, 'conflict_score_method', 'regional')}"
     slug += f"_ctemp{getattr(cfg, 'conflict_temperature', 0.15)}"
 
     result_dir = getattr(cfg, "result_output_dir", "result_new")
@@ -109,9 +108,6 @@ def main():
     parser.add_argument("--conflict_threshold", type=float, default=None, help="Override conflict_threshold from config")
     parser.add_argument("--conflict_temperature", type=float, default=None, help="Override conflict_temperature from config")
     parser.add_argument("--blend_function", type=str, default=None, help="Override blend_function from config (sigmoid or smootherstep)")
-    parser.add_argument("--conflict_score_method", type=str, default=None, help="Override conflict_score_method from config (regional or direct)")
-    parser.add_argument("--regional_conflict_sigma", type=float, default=None, help="Override regional_conflict_sigma from config")
-    parser.add_argument("--online_loss_type", type=str, default=None, help="Override online_loss_type from config (ground_truth, mse_simple, or gradient)")
     parser.add_argument("--guidance_ckpt_dir", type=str, default=None, help="Override guidance_ckpt_dir from config")
     parser.add_argument("--result_output_dir", type=str, default=None, help="Override result_output_dir from config")
     parser.add_argument("--x1_conflict_threshold", type=float, default=None, help="Override x1_conflict_threshold from config (early stopping threshold: stop training when x1_conflict_ratio < x1_conflict_threshold)")
@@ -128,8 +124,7 @@ def main():
     # the user explicitly set (i.e. left at their non-None value).
     override_keys = [
         "guidance_fn", "guidance_scale", "conflict_threshold", "conflict_temperature",
-        "blend_function", "conflict_score_method", "regional_conflict_sigma",
-        "online_loss_type", "guidance_ckpt_dir", "result_output_dir",
+        "blend_function", "guidance_ckpt_dir", "result_output_dir",
         "x1_conflict_threshold", "active_ratio_threshold",
         "loss_early_stop_threshold", "conflict_mask_type",
         "disable_conflict_guidance_weight", "fixed_guidance_weight",
