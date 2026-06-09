@@ -1,0 +1,42 @@
+lr: 0.001
+batch_size: 4096
+iterations: 20000
+hidden_dim: 512
+guidance_scale: 7          # 10 for guidance_matching; 7 for g_cov_g
+classifier_epochs: 2000
+classifier_lr: 0.001
+device: cuda               # or cpu
+vf_model: miniunet         # mlp, filmresnet, miniunet
+
+### guidance configuration
+guidance_fn: car_guidance  # g_cov_g, guidance_matching, car_guidance
+guidance_train_steps: 10000
+guidance_batch_size: 1024
+guidance_lr: 0.0001
+energy_temperature: 1.0
+conflict_threshold: 0.495            # gate at ~perpendicular gradients (conflict score is in [0,1])
+conflict_temperature: 0.01           # sigmoid/smootherstep transition width of the conflict gate
+blend_function: smootherstep         # "smootherstep" or "sigmoid"
+conflict_score_method: direct        # "regional" or "direct"
+regional_conflict_sigma: 0.1         # Gaussian noise std for regional conflict-score sampling
+online_loss_type: ground_truth       # "ground_truth", "mse_simple", or "gradient"
+x1_conflict_threshold: 0.0           # early-stop when x1_conflict_ratio < threshold
+active_ratio_threshold: 0.01         # early-stop when trajectory conflict ratio < threshold
+loss_early_stop_threshold: 0.000001  # early-stop when loss < threshold
+
+guidance_ckpt_dir: guidance/pretrained_guidance/guidance_ckpt_default  # overridden by --guidance_ckpt_dir in running.sh
+
+### refine gradient
+estimate_x1: true
+
+### discretization
+step_size: 0.01
+batch_size_plot_traj: 100
+start_guidance_threshold: 0.0
+
+### output configuration
+result_output_dir: result  # base directory for results (relative to script directory)
+
+### visualization configuration
+use_reward_landscape: true          # plot reward (higher=better) instead of energy
+integrate_gradient_to_energy: true  # integrate gradient fields to scalar energy for plotting
