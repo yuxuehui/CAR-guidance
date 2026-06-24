@@ -1,9 +1,6 @@
 # CAR Guidance — Image Experiment
 
 ## Controlling Rectified Flow on CelebA-HQ
-
-We provide the scripts for applying OC-Flow to control the output of pre-trained Rectified Flow model on CelebA-HQ.
-
 The pre-trained generative model can be downloaded from [Rectified Flow CelebA-HQ](https://drive.google.com/file/d/1ryhuJGz75S35GEdWDLiq4XFrsbwPdHnF/view?usp=sharing) 
 Just put it in ``` ./ ```
 
