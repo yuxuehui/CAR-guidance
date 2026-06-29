@@ -43,8 +43,8 @@ We evaluate CAR guidance on three tasks. Download the corresponding dataset befo
 ## Checkpoints
 
 - **Text-Guided Image Manipulation — CelebA-HQ-1024.**
-- **Robot Planning — Maze2D.**
-- **Robot Manipulation — ManiSkill2.**
+- **Robot Planning — [Maze2D](https://drive.google.com/drive/folders/17Gy6ZlLGMIzd0LsDS71pZQjRmhT82lty?usp=sharing).**
+- **Robot Manipulation — [ManiSkill2](https://drive.google.com/drive/folders/17Gy6ZlLGMIzd0LsDS71pZQjRmhT82lty?usp=sharing).**
 
 ## 📎 Citation
 
