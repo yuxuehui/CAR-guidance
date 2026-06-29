@@ -1,0 +1,44 @@
+name: "mppi_exp1_static"
+description: "MPPI Baseline - 实验1：静态能量场 (Perturbation-Based 最终修正版)"
+
+mppi:
+  horizon: 40
+  num_samples: 1000
+
+  lambda: 0.1
+
+  noise_sigma: 0.3
+
+  dt: 0.05
+  num_iterations: 30
+
+  sigma: 2.0
+  use_perturbation_cost: true
+  deviation_weight: 5.0
+  gcar_follow_weight: 30.0
+
+  smoothing_kernel_size: 5
+  smoothing_sigma: 1.0
+
+  cost_weights:
+    goal: 100.0
+
+    static_energy: 40.0
+    dynamic_energy: 0.0
+
+    smoothness: 100.0
+
+    wall_collision: 100.0
+
+    boundary: 200.0
+
+num_energy_centers: 2
+energy_scales: [-1.0, -1.0]
+seed: 42
+
+evaluation:
+  goal_tolerance: 0.2
+  collision_margin: 0.0
+  wall_size: 1.0
+
+output_dir: "exp_mppi/outputs/exp1_static"

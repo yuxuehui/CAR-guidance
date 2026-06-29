@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<robot name="Panda">
+    <link name="dummy" />
+    <joint name="Pandaattachment" type="fixed">
+        <axis xyz="0 0 1" />
+        <parent link="dummy" />
+        <child link="Pandagripper" />
+        <origin xyz="0.000000 0.000000 0.0" rpy="-3.141592 3.141593 -0.785397" />
+    </joint>
+    <link name="Pandagripper">
+        <inertial>
+            <origin rpy="3.141592 3.141593 0.785397" xyz="0.000819 -0.000828 0.021778" />
+            <inertia izz="0.099999997764826" ixx="0.099999997764826" ixy="0.0" iyz="6.505213034913e-18" iyy="0.099999997764826" ixz="-5.6910026143648e-21" />
+            <mass value="0.625" />
+        </inertial>
+        <collision name="Panda_gripper">
+            <origin xyz="-0.000000 0.000002 0.017867" rpy="3.141592 3.141593 0.785397" />
+            <geometry>
+                <mesh filename="meshes/Pandagripper_coll_1.dae" />
+            </geometry>
+        </collision>
+        <visual name="Panda_gripper_visual">
+            <origin xyz="-0.000063 -0.000203 0.018002" rpy="-1.571379 3.159396 -2.356337" />
+            <geometry>
+                <mesh filename="meshes/Pandagrippervisual_vis_1.dae" />
+            </geometry>
+            <material name="Pandagrippervisual_material">
+                <color rgba="0.700000 0.700000 0.700000 1.0" />
+            </material>
+        </visual>
+        <visual name="Panda_gripper_visual">
+            <origin xyz="-0.000063 -0.000203 0.018002" rpy="-1.571379 3.159396 -2.356337" />
+            <geometry>
+                <mesh filename="meshes/Pandagrippervisual_vis_2.dae" />
+            </geometry>
+            <material name="Pandagrippervisual_material">
+                <color rgba="0.100000 0.100000 0.100000 1.0" />
+            </material>
+        </visual>
+        <visual name="Panda_gripper_visual">
+            <origin xyz="-0.000063 -0.000203 0.018002" rpy="-1.571379 3.159396 -2.356337" />
+            <geometry>
+                <mesh filename="meshes/Pandagrippervisual_vis_3.dae" />
+            </geometry>
+            <material name="Pandagrippervisual_material">
+                <color rgba="0.100000 0.100000 0.100000 1.0" />
+            </material>
+        </visual>
+        <visual name="Panda_gripper_visual">
+            <origin xyz="-0.000063 -0.000203 0.018002" rpy="-1.571379 3.159396 -2.356337" />
+            <geometry>
+                <mesh filename="meshes/Pandagrippervisual_vis_4.dae" />
+            </geometry>
+            <material name="Pandagrippervisual_material">
+                <color rgba="0.700000 0.700000 0.700000 1.0" />
+            </material>
+        </visual>
+        <visual name="Panda_gripper_visual">
+            <origin xyz="-0.000063 -0.000203 0.018002" rpy="-1.571379 3.159396 -2.356337" />
+            <geometry>
+                <mesh filename="meshes/Pandagrippervisual_vis_5.dae" />
+            </geometry>
+            <material name="Pandagrippervisual_material">
+                <color rgba="0.980000 0.980000 0.980000 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint name="Pandagripperjoint1" type="prismatic">
+        <axis xyz="0 0 1" />
+        <limit effort="20.0" upper="0.03999999910593" lower="0.0" velocity="0.20000000298023" />
+        <parent link="Pandagripper" />
+        <child link="Pandaleftfingerrespondable" />
+        <origin xyz="0.001252 -0.001265 0.056248" rpy="1.570795 3.141593 0.785397" />
+    </joint>
+    <link name="Pandaleftfingerrespondable">
+        <inertial>
+            <origin rpy="1.570798 3.141593 3.141592" xyz="-0.000127 -0.032800 0.010514" />
+            <inertia izz="0.16384000411987" ixx="0.16384000411987" ixy="-3.0907193081338e-27" iyz="6.7762638998897e-24" iyy="0.16384000411987" ixz="0.0" />
+            <mass value="1.0240000486374" />
+        </inertial>
+        <collision name="Panda_leftfinger_respondable">
+            <origin xyz="-0.000127 -0.032800 0.010514" rpy="1.570798 3.141593 3.141592" />
+            <geometry>
+                <box size="0.020000 0.020000 0.040000" />
+            </geometry>
+        </collision>
+        <visual name="Panda_leftfinger_visible">
+            <origin xyz="0.000008 -0.026877 0.012377" rpy="0.012202 4.625336 1.558928" />
+            <geometry>
+                <mesh filename="meshes/Pandaleftfingervisible_vis_1.dae" />
+            </geometry>
+            <material name="Pandaleftfingervisible_material">
+                <color rgba="0.700000 0.700000 0.700000 1.0" />
+            </material>
+        </visual>
+        <visual name="Panda_leftfinger_visible">
+            <origin xyz="0.000008 -0.026877 0.012377" rpy="0.012202 4.625336 1.558928" />
+            <geometry>
+                <mesh filename="meshes/Pandaleftfingervisible_vis_2.dae" />
+            </geometry>
+            <material name="Pandaleftfingervisible_material">
+                <color rgba="0.100000 0.100000 0.100000 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint name="PandagrippertouchSensor1" type="fixed">
+        <axis xyz="0 0 1" />
+        <parent link="Pandaleftfingerrespondable" />
+        <child link="Pandaleftfingerforcecontact" />
+        <origin xyz="0.000669 -0.046486 0.003462" rpy="0.000000 3.141596 1.570792" />
+    </joint>
+    <link name="Pandaleftfingerforcecontact">
+        <inertial>
+            <origin rpy="0.560700 4.712387 1.010122" xyz="-0.001988 -0.000004 0.002996" />
+            <inertia izz="4.6681012360921e-09" ixx="9.2876131861735e-09" ixy="6.7222789648412e-19" iyz="-5.0338440924485e-24" iyy="4.668100896625e-09" ixz="-3.4552499796044e-17" />
+            <mass value="0.00018662401998881" />
+        </inertial>
+        <collision name="Panda_leftfinger_force_contact">
+            <origin xyz="-0.001988 -0.000004 0.002996" rpy="0.560700 4.712387 1.010122" />
+            <geometry>
+                <box size="0.001250 0.017280 0.017280" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="Pandagripperjoint2" type="prismatic">
+        <axis xyz="0 0 1" />
+        <limit effort="20.0" upper="0.03999999910593" lower="0.0" velocity="0.20000000298023" />
+        <parent link="Pandagripper" />
+        <child link="Pandarightfingerrespondable" />
+        <origin xyz="0.001252 -0.001265 0.056248" rpy="-1.570797 3.141593 0.785397" />
+    </joint>
+    <link name="Pandarightfingerrespondable">
+        <inertial>
+            <origin rpy="-1.570796 3.141593 -3.141592" xyz="-0.000035 0.032737 0.010537" />
+            <inertia izz="0.16383998504639" ixx="0.16383998504639" ixy="-1.6035710940696e-27" iyz="0.0" iyy="0.16383998504639" ixz="2.1175822221965e-25" />
+            <mass value="1.0239999294281" />
+        </inertial>
+        <collision name="Panda_rightfinger_respondable">
+            <origin xyz="-0.000035 0.032737 0.010537" rpy="-1.570796 3.141593 -3.141592" />
+            <geometry>
+                <box size="0.020000 0.020000 0.040000" />
+            </geometry>
+        </collision>
+        <visual name="Panda_rightfinger_visual">
+            <origin xyz="-0.000004 0.026907 0.012652" rpy="-3.132696 4.641150 -1.579601" />
+            <geometry>
+                <mesh filename="meshes/Pandarightfingervisual_vis_1.dae" />
+            </geometry>
+            <material name="Pandarightfingervisual_material">
+                <color rgba="0.700000 0.700000 0.700000 1.0" />
+            </material>
+        </visual>
+        <visual name="Panda_rightfinger_visual">
+            <origin xyz="-0.000004 0.026907 0.012652" rpy="-3.132696 4.641150 -1.579601" />
+            <geometry>
+                <mesh filename="meshes/Pandarightfingervisual_vis_2.dae" />
+            </geometry>
+            <material name="Pandarightfingervisual_material">
+                <color rgba="0.100000 0.100000 0.100000 1.0" />
+            </material>
+        </visual>
+    </link>
+    <joint name="PandagrippertouchSensor0" type="fixed">
+        <axis xyz="0 0 1" />
+        <parent link="Pandarightfingerrespondable" />
+        <child link="Pandarightfingerforcecontact" />
+        <origin xyz="0.000703 0.046397 0.003536" rpy="0.000000 3.141593 -1.570796" />
+    </joint>
+    <link name="Pandarightfingerforcecontact">
+        <inertial>
+            <origin rpy="0.560700 4.712387 1.010122" xyz="-0.001988 -0.000004 0.002996" />
+            <inertia izz="4.6681012360921e-09" ixx="9.2876131861735e-09" ixy="6.7222789648412e-19" iyz="-5.0338440924485e-24" iyy="4.668100896625e-09" ixz="-3.4552499796044e-17" />
+            <mass value="0.00018662401998881" />
+        </inertial>
+        <collision name="Panda_rightfinger_force_contact">
+            <origin xyz="-0.001988 -0.000004 0.002996" rpy="0.560700 4.712387 1.010122" />
+            <geometry>
+                <box size="0.001250 0.017280 0.017280" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="Pandatip" />
+    <joint name="Pandatipjoint" type="fixed">
+        <parent link="Pandagripper" />
+        <child link="Pandatip" />
+        <origin xyz="0.001418 -0.001408 0.109935" rpy="-3.141592 3.141591 -2.356195" />
+    </joint>
+</robot>

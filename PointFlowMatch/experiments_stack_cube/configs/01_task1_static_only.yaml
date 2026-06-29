@@ -1,0 +1,26 @@
+experiment_name: "01_task1_static_only"
+
+model:
+  ckpt_path: "maniskill_train_stack_cube_concat_goal_pos_big/ep1500-ba43500"
+
+data:
+  demos_path: "experiments_stack_cube/data/success_demos/success_demos.json"
+  num_test_episodes: 30
+  max_steps: 200
+  num_actions_per_step: 32
+
+guidance:
+  type: "none"
+
+evaluation:
+  metrics:
+    - success_rate
+    - average_jerk
+    - min_obstacle_distance
+  save_trajectories: true
+  save_videos: true
+  visualize: false
+
+output_dir: "experiments_stack_cube/outputs/01_task1_static_only"
+
+save_actions: true

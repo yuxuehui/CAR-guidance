@@ -1,0 +1,21 @@
+defaults:
+  - base_config
+
+experiment_name: "pick_cube_static"
+
+guidance:
+  type: "static"
+
+  energy_centers:
+    - [0.0, 0.2, 0.15]
+    - [0.0, -0.2, 0.15]
+
+  energy_scales:
+    - -1.0
+    - -1.0
+
+  sigma: 0.1
+
+  max_guidance: 0.5
+
+  record_step: true

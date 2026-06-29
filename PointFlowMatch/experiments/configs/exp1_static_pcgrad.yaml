@@ -1,0 +1,33 @@
+experiment_name: "exp1_static_pcgrad"
+
+model:
+  ckpt_path: "maniskill_train_pcd_from_three_cameras_more_gripper/ep1500-ba160500"
+
+data:
+  demos_path: "experiments/data/success_demos/success_demos.json"
+  num_test_episodes: 1
+  max_steps: 100
+  num_actions_per_step: 32
+
+guidance:
+  type: "static"
+  num_energy_centers: 2
+  energy_scales: [-1.5, -1.5]
+  sigma: 0.2
+  max_guidance: null
+  combine_method: "pcgrad"
+  seed: 42
+  enable_dynamic_energy_field: true
+
+evaluation:
+  metrics:
+    - success_rate
+    - average_jerk
+    - min_obstacle_distance
+  save_trajectories: true
+  save_videos: true
+  visualize: false
+  video_resolution: [1920, 1080]
+  video_output_dir: null
+
+output_dir: "experiments/outputs/exp1_static_pcgrad"

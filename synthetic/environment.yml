@@ -1,0 +1,24 @@
+# Conda environment for the CAR-guidance synthetic experiment.
+#
+#   conda env create -f environment.yml
+#   conda activate car_guidance
+#
+# Pinned versions match the environment used to produce the paper results
+# (Python 3.10, PyTorch 2.6 + CUDA 12.4). The default PyPI torch 2.6.0 Linux
+# wheel ships with CUDA 12.4; for a different CUDA/CPU build install the matching
+# wheel from https://pytorch.org/get-started/locally/ .
+name: car_guidance
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch==2.6.0
+      - numpy==2.1.2
+      - matplotlib==3.10.1
+      - plotly==6.0.1
+      - pyyaml==6.0.2
+      - torchdiffeq==0.2.5   # ODE solver backing flow_matching.solver.ODESolver
+      - diffusers==0.32.2    # randn_tensor used by flow_matching.solver.sde_solver
+      - tqdm==4.67.1         # progress bars in flow_matching solvers

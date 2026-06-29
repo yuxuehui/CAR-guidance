@@ -1,0 +1,32 @@
+name: "exp2_goal_gcov"
+description: "实验2：目标吸引Guidance + g_cov_a_gm_online优化"
+
+model:
+  checkpoint_path: "checkpoints/checkpoint_epoch_20.pth"
+
+guidance:
+  type: "goal"
+  num_energy_centers: 2
+  energy_scales: [2.0, 2.0]
+  sigma: 1.0
+  max_guidance: null
+  use_gcov_optimization: true
+  train_online: true
+  online_train_steps: 20
+  online_batch_size: 16
+  online_lr: 1e-4
+  online_loss_type: "gradient"
+  conflict_threshold: 0.15
+  conflict_temperature: 0.1
+  seed: 42
+
+inference:
+  num_steps: 20
+  dt: 0.05
+
+evaluation:
+  goal_tolerance: 0.1
+  collision_margin: 0.0
+  wall_size: 1.0
+
+output_dir: "experiments/outputs/exp2_goal_gcov"

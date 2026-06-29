@@ -1,0 +1,26 @@
+name: "exp2_goal_pcgrad"
+description: "实验2：目标吸引Guidance（PCGrad梯度手术，Yu et al. 2020）"
+
+model:
+  checkpoint_path: "checkpoints/checkpoint_epoch_20.pth"
+
+guidance:
+  type: "goal"
+  num_energy_centers: 2
+  energy_scales: [2.0, 2.0]
+  sigma: 2.0
+  max_guidance: null
+  use_gcov_optimization: false
+  combine_method: "pcgrad"
+  seed: 42
+
+inference:
+  num_steps: 20
+  dt: 0.05
+
+evaluation:
+  goal_tolerance: 0.1
+  collision_margin: 0.0
+  wall_size: 1.0
+
+output_dir: "experiments/outputs/exp2_goal_pcgrad"

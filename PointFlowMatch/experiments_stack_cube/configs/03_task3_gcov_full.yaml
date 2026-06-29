@@ -1,0 +1,59 @@
+experiment_name: "03_task3_gcov_full"
+
+model:
+  ckpt_path: "maniskill_train_stack_cube_concat_goal_pos_big/ep1500-ba43500"
+
+data:
+  demos_path: "experiments_stack_cube/data/success_demos/success_demos.json"
+  num_test_episodes: 30
+  max_steps: 200
+  num_actions_per_step: 32
+
+guidance:
+  type: "gcov"
+  num_energy_centers: 2
+  energy_scales: [-0.5, -0.5]
+  sigma: 0.1
+  max_guidance: null
+  seed: 42
+
+  train_online: true
+  online_train_steps: 10
+  online_batch_size: 32
+  online_lr: 5e-3
+  num_ode_steps: 20
+
+  conflict_threshold: 0.15
+  conflict_temperature: 0.1
+
+  online_loss_type: "gradient"
+  energy_temperature: 1.0
+  policy_temperature: 1.0
+
+  obstacle_reward_weight: 1.0
+  goal_reward_weight: 10.0
+
+  learned_correction_scale: 1.0
+
+  save_visualization_data: false
+
+  record_guidance_details: false
+
+  residual_unet_channels: 64
+  residual_unet_down_dims: [256, 512, 1024]
+
+evaluation:
+  metrics:
+    - success_rate
+    - average_jerk
+    - min_obstacle_distance
+  save_trajectories: true
+  save_videos: false
+  visualize: false
+
+output_dir: "experiments_stack_cube/outputs/03_task3_gcov_full"
+
+save_actions: true
+
+adaptive:
+  disable_guidance_after_first_round: true

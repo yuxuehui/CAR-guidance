@@ -1,0 +1,33 @@
+experiment_name: "01_task1_static_only"
+
+model:
+  ckpt_path: "maniskill_train_pcd_from_three_cameras_more_gripper/ep1500-ba160500"
+
+data:
+  demos_path: "experiments/data/success_demos/success_demos.json"
+  num_test_episodes: 1
+  max_steps: 200
+  num_actions_per_step: 32
+
+guidance:
+  type: "static"
+  num_energy_centers: 2
+  energy_scales: [0.0, 0.0]
+  sigma: 0.2
+  max_guidance: null
+  seed: 42
+  enable_dynamic_energy_field: false
+
+evaluation:
+  metrics:
+    - success_rate
+    - average_jerk
+    - min_obstacle_distance
+  save_trajectories: true
+  save_videos: false
+  visualize: false
+
+output_dir: "experiments/outputs/01_task1_static_only"
+
+save_actions: true
+actions_output_path: "experiments/outputs/01_task1_static_only/actions.json"

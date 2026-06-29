@@ -1,0 +1,72 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs & checkpoints
+*.log
+*.ckpt
+*.pth
+*.pt
+*.safetensors
+*.onnx
+wandb/
+checkpoints/
+ckpt/
+train_logs/
+runs/
+lightning_logs/
+
+# Experiment outputs (flow_motion_plan / PointFlowMatch / synthetic)
+outputs/
+outputs_*/
+
+# Generated media (renders, videos, plots)
+*.mp4
+*.avi
+*.mov
+*.gif
+
+# Large local data caches
+*.h5
+*.hdf5
+*.npz
+*.pkl
+*.pickle
+
+# Vendored simulator dependency (large fork with its own .git; install separately)
+PointFlowMatch/ManiSkill/
+
+# Large training/validation datasets (regenerate or download separately)
+PointFlowMatch/data/
+
+# Misc
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+.cache/
+*.zip
+
+# IDE
+.idea/
+.vscode/
