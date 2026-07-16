@@ -19,6 +19,19 @@ Official implementation of **Conflict-Aware Additive Guidance for Flow Models un
 
 https://github.com/user-attachments/assets/4fefa401-ea46-4bf4-8a55-3fdce9e1ded3
 
+## Repository Structure
+
+Each experiment lives in its own self-contained directory:
+
+| Directory | Experiment | Base model / benchmark |
+|---|---|---|
+| [`synthetic/`](synthetic/) | Synthetic 2D | Pretrained flow-matching velocity field on 2D toy distributions |
+| [`image/`](image/) | Text-guided image manipulation | Rectified Flow on CelebA-HQ-1024 |
+| [`flow_motion_plan/`](flow_motion_plan/) | Robot planning | Conditional Flow Matching planner on Maze2D |
+| [`3d_pc_robot_manipulation/`](3d_pc_robot_manipulation/) | Robot manipulation | Point-cloud CFM policy (PointFlowMatch) on ManiSkill2 |
+
+See each directory's README for its own setup, datasets, and run instructions.
+
 ## Requirements
 
 Each task has its own directory with a self-contained environment. Set up the one for the experiment you want to run. For example, for the image editing task:
@@ -30,7 +43,7 @@ conda activate car_guidance
 pip install -r requirements.txt
 ```
 
-The other tasks follow the same steps — replace `image` with `synthetic`, `planning` or `manipulation`.
+The other tasks follow the same steps — replace `image` with `synthetic`, `flow_motion_plan` or `3d_pc_robot_manipulation`.
 
 ## Datasets
 
