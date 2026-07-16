@@ -19,7 +19,7 @@ Included methods:
 
 ## Setup
 
-One shared conda env for both released experiments (this and `PointFlowMatch`).
+One shared conda env for both released experiments (this and `3d_pc_robot_manipulation`).
 See `../INSTALL.md` and `../requirements.txt` (Python 3.10, PyTorch 2.1.2/cu121).
 This experiment only needs `torch`, the vendored `flow_matching/`, `h5py`,
 `numpy`, `matplotlib`.

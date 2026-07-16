@@ -63,7 +63,7 @@ score — aligned with the synthetic reference implementation).
 ## Layout
 
 ```
-PointFlowMatch/
+3d_pc_robot_manipulation/
 ├── pfp/                      # base CFM policy library (slimmed to ManiSkill)
 │   ├── policy/               # fm_policy_maniskill.py (FMPolicy), energy_guide.py
 │   ├── backbones/            # pointnet.py, pointnet_concat_goal.py

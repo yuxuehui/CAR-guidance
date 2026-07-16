@@ -2,7 +2,7 @@
 
 ## 概述
 
-参考 `flow_motion_plan` 中实验一的能量场实现，在 `PointFlowMatch` 的训练好的 pick-cube 模型上添加了能量场引导功能。
+参考 `flow_motion_plan` 中实验一的能量场实现，在 `3d_pc_robot_manipulation` 的训练好的 pick-cube 模型上添加了能量场引导功能。
 
 ## 实现内容
 
