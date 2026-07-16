@@ -55,9 +55,10 @@ We evaluate CAR guidance on three tasks. Download the corresponding dataset befo
 
 ## Checkpoints
 
-- **Text-Guided Image Manipulation — CelebA-HQ-1024.**
-- **Robot Planning — Maze2D.**
-- **Robot Manipulation — ManiSkill2.**
+- **Synthetic 2D.** Shipped with the repo — the pretrained velocity field (`synthetic/pretrain_vf_model/`) and guidance classifiers (`synthetic/guidance/pretrained_guidance/`). No download needed.
+- **Text-Guided Image Manipulation — CelebA-HQ-1024.** Download the pretrained Rectified Flow generative model from [Rectified Flow CelebA-HQ](https://drive.google.com/file/d/1ryhuJGz75S35GEdWDLiq4XFrsbwPdHnF/view?usp=sharing); see [`image/README.md`](image/README.md).
+- **Robot Planning — Maze2D.** Base CFM planner checkpoint will be released on [car-guidance/GAR_guidance](https://huggingface.co/datasets/car-guidance/GAR_guidance); place it under `flow_motion_plan/checkpoints/`.
+- **Robot Manipulation — ManiSkill2.** Trained point-cloud policy checkpoints will be released on [car-guidance/GAR_guidance](https://huggingface.co/datasets/car-guidance/GAR_guidance); place them under `3d_pc_robot_manipulation/ckpt/`.
 
 ## 📎 Citation
 
