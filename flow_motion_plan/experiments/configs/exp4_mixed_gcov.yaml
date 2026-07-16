@@ -1,0 +1,35 @@
+name: "exp4_mixed_gcov"
+description: "实验4：混合能量场Guidance（静态+动态）+ g_cov_a_gm_online优化"
+
+model:
+  checkpoint_path: "checkpoints/checkpoint_epoch_20.pth"
+
+guidance:
+  num_static_energy_centers: 1
+  static_energy_scales: [-2.0]
+
+  num_dynamic_paths: 1
+  dynamic_energy_scales: [-2.0]
+
+  sigma: 2.0
+  seed: 42
+
+  use_gcov_optimization: true
+  train_online: true
+  online_loss_type: "gradient"
+  conflict_threshold: 0.15
+  conflict_temperature: 0.1
+  online_train_steps: 10
+  online_batch_size: 16
+  online_lr: 1e-4
+
+inference:
+  num_steps: 20
+  dt: 0.05
+
+evaluation:
+  goal_tolerance: 0.1
+  collision_margin: 0.0
+  wall_size: 1.0
+
+output_dir: "experiments/outputs/exp4_mixed_gcov"

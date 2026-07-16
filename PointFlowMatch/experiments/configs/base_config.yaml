@@ -1,0 +1,31 @@
+experiment_name: "pick_cube_baseline"
+
+model:
+  ckpt_path: "ckpt/maniskill_train_stack_cube_concat_goal_pos/ep1500.pt"
+  task_name: "PickCube-v0"
+  num_k_infer: 10
+  device: "cuda"
+  norm_pcd_center: [0.4, 0.0, 0.25]
+  flow_schedule: "linear"
+  exp_scale: null
+
+data:
+  test_data_path: "data/test"
+  num_test_episodes: 50
+  n_obs_steps: 2
+  n_pred_steps: 32
+
+evaluation:
+  metrics:
+    - success_rate
+    - smoothness
+    - execution_time
+  save_trajectories: true
+  save_videos: false
+
+output:
+  base_dir: "experiments/outputs"
+  save_interval: 10
+
+guidance:
+  type: "none"

@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Large artifacts (host externally; keep download links in README)
+checkpoints/
+*.pth
+*.ckpt
+*.pt
+
+# Experiment outputs
+**/outputs/
+**/outputs_*/
+**/mppi_outputs/
+*.png
+*.mp4
+*.gif
+
+# Stale vendored duplicate of the synthetic experiment (see reference_synthetic/)
+composed_control_for_flow_matching/

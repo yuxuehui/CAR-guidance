@@ -1,0 +1,42 @@
+name: "mppi_exp3_dynamic"
+description: "MPPI Baseline - 实验3：动态障碍物 (Broad Exploration)"
+
+mppi:
+  horizon: 40
+  num_samples: 2000
+  lambda: 0.05
+
+  noise_sigma: 0.8
+  step_size: 0.8
+
+  dt: 0.05
+  num_iterations: 50
+
+  sigma: 2.0
+
+  smoothing_kernel_size: 15
+  smoothing_sigma: 3.0
+
+  use_perturbation_cost: true
+
+  cost_weights:
+    terminal_goal: 500.0
+
+    running_goal: 10.0
+
+    dynamic_energy: 100.0
+
+    static_energy: 0.0
+    wall_collision: 200.0
+    boundary: 500.0
+    smoothness: 0.1
+
+path_offset: 0.5
+path_seed: null
+
+evaluation:
+  goal_tolerance: 0.2
+  collision_margin: 0.0
+  wall_size: 1.0
+
+output_dir: "exp_mppi/outputs/exp3_dynamic"

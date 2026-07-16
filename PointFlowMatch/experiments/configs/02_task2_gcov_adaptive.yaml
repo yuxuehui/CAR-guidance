@@ -1,0 +1,61 @@
+experiment_name: "02_task2_gcov_adaptive"
+
+model:
+  ckpt_path: "maniskill_train_pcd_from_three_cameras_more_gripper/ep1500-ba160500"
+
+data:
+  demos_path: "experiments/data/success_demos/success_demos.json"
+  num_test_episodes: 10
+  max_steps: 200
+  num_actions_per_step: 32
+
+guidance:
+  type: "gcov_adaptive"
+  num_energy_centers: 2
+  energy_scales: [-0.5, -0.5]
+  sigma: 0.3
+  max_guidance: null
+  seed: 42
+
+  train_online: true
+  online_train_steps: 100
+  online_batch_size: 32
+  online_lr: 5e-3
+  num_ode_steps: 20
+
+  conflict_threshold: 0.15
+  conflict_temperature: 0.1
+
+  online_loss_type: "gradient"
+  energy_temperature: 1.0
+  policy_temperature: 1.0
+
+  obstacle_reward_weight: 1.0
+  goal_reward_weight: 10.0
+
+  learned_correction_scale: 1.0
+
+  save_visualization_data: false
+
+  record_guidance_details: false
+
+  residual_unet_channels: 64
+  residual_unet_down_dims: [256, 512, 1024]
+
+evaluation:
+  metrics:
+    - success_rate
+    - average_jerk
+    - min_obstacle_distance
+  save_trajectories: true
+  save_videos: false
+  visualize: false
+
+output_dir: "experiments/outputs/02_task2_gcov_adaptive"
+
+save_actions: true
+actions_output_path: "experiments/outputs/02_task2_gcov_adaptive/actions.json"
+
+adaptive:
+  disable_guidance_after_first_round: true
+  max_rounds: 3

@@ -1,0 +1,19 @@
+name: "baseline"
+description: "Baseline实验：无guidance"
+
+model:
+  checkpoint_path: "checkpoints/checkpoint_epoch_20.pth"
+
+guidance:
+  type: "none"
+
+inference:
+  num_steps: 20
+  dt: 0.05
+
+evaluation:
+  goal_tolerance: 0.3
+  collision_margin: 0.0
+  wall_size: 1.0
+
+output_dir: "experiments/outputs/baseline"

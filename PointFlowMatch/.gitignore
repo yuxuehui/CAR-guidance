@@ -1,0 +1,37 @@
+# Python
+**/__pycache__/**
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Demonstration data (host externally; keep download links in README)
+data/
+
+# Trained checkpoints / runs (host externally)
+**/ckpt/**
+**/wandb/**
+**/multirun/**
+*.pth
+*.ckpt
+*.pt
+
+# Experiment outputs
+**/outputs/**
+**/outputs_*/**
+**/demos/**
+**/toy_circle/results/**
+*plot.png
+*.png
+*.svg
+**.html
+train_logs/
+
+# Vendored ManiSkill3 clone — install via `pip install mani_skill==3.0.0b21` (see INSTALL.md)
+ManiSkill/
+
+# Scratch / standalone toy experiments (not part of the paper's ManiSkill results)
+sandbox/
+toy_circle/

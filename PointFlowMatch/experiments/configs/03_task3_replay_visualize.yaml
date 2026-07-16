@@ -1,0 +1,37 @@
+experiment_name: "03_task3_replay_visualize"
+
+model:
+  ckpt_path: "maniskill_train_pcd_from_three_cameras_more_gripper/ep1500-ba160500"
+
+data:
+  demos_path: "experiments/data/success_demos/success_demos.json"
+  replay_actions_path: "experiments/outputs/02_task2_gcov_adaptive/actions.json"
+  num_test_episodes: 10
+
+guidance:
+  num_energy_centers: 2
+  energy_scales: [-1.0, -1.0]
+  sigma: 0.2
+  seed: 42
+
+visualization:
+  show_energy_centers: true
+  show_trajectory: true
+  show_energy_field: true
+  energy_field_resolution: 50
+  trajectory_color: "blue"
+  energy_center_color: "red"
+  energy_center_size: 200
+  trajectory_linewidth: 2
+
+evaluation:
+  metrics:
+    - success_rate
+    - average_jerk
+    - min_obstacle_distance
+  save_videos: true
+  video_resolution: [1920, 1080]
+  video_fps: 20
+
+output_dir: "experiments/outputs/03_task3_replay_visualize"
+video_output_dir: "experiments/outputs/03_task3_replay_visualize/videos"

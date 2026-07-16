@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=62.3.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pfp"
+version = "0.1.0"
+description = "PointFlowMatch + Conflict-Aware Additive Guidance (ManiSkill manipulation)"
+requires-python = ">=3.10,<3.11"
+
+# NOTE: torch / torchvision / torchaudio, pytorch3d, pypose, diffusion_policy
+# (chisarie@develop/eugenio) and flow_matching are installed separately in
+# setup_env.sh (special index URLs / git / prebuilt wheels). They are NOT listed
+# here so `pip install -e .` does not try to resolve them from PyPI.
+dependencies = [
+    "numpy<2",
+    "scipy",
+    "mosaicml==0.21.3",      # the `composer` training framework
+    "einops",
+    "open3d",
+    "zarr<3",                # replay_buffer uses the zarr v2 API
+    "trimesh",
+    "yourdfpy",
+    "hydra-core",
+    "omegaconf",
+    "wandb",
+    "h5py",
+    "matplotlib",
+    "pandas",
+    "seaborn",
+    "spatialmath-python",
+    "tqdm",
+    "imageio",
+    "opencv-python",
+    "gymnasium",
+    "diffusers",
+    "pyyaml",
+    "pillow",
+]
+
+[tool.setuptools.packages.find]
+include = ["pfp*"]
