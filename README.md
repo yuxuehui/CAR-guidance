@@ -52,9 +52,9 @@ If you find CAR guidance useful in your research, please consider citing our pap
 
 ```bibtex
 @inproceedings{
-anonymous2026conflictaware,
+yu2026conflictaware,
 title={Conflict-Aware Additive Guidance for  Flow Models under Compositional Rewards},
-author={Anonymous},
+author={Xuehui Yu and Fucheng Cai and WANG MEIYI and Xiaopeng Fan and Harold Soh},
 booktitle={Forty-third International Conference on Machine Learning},
 year={2026},
 url={https://openreview.net/forum?id=DJtX0Fo7ii}
